@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/asm-3.2.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/asm-commons-3.2.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/browser.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/checkconfigurationfile.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/checkser.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/classdep.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/classserver.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/computedigest.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/computehttpmdcodebase.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/destroy.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/envcheck.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/extra.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/fiddler.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/group.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/jarwrapper.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/jini-core.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/jini-ext.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/jsk-debug-policy.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/jsk-lib.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/jsk-platform.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/jsk-resources.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/mahalo.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/mercury.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/norm.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/outrigger.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/outrigger-snaplogstore.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/phoenix.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/phoenix-group.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/phoenix-init.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/preferredlistgen.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/reggie.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/serviceui.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/sharedvm.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/start.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/sun-util.jar"/>
+	<classpathentry kind="lib" path="/home/narcelio/Downloads/river/lib/tools.jar"/>
+	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -10,7 +10,7 @@ public class Host extends ObjetoBase {
 	public Host(String nome, Nuvem nuvem) {
 		super(nome);
 		this.nuvem = nuvem;
-		iniciaEspaco();
+		//iniciaEspaco();
 	}
 	
 	public void iniciaEspaco() {
@@ -40,6 +40,7 @@ public class Host extends ObjetoBase {
 			indice++;
 		}
 		listaVm.add(new Vm("vm"+this.indice,nuvem,this));
+		listaVm.get(listaVm.size()-1).iniciaEspaco();
 		indice++;
 	}
 	
@@ -52,6 +53,7 @@ public class Host extends ObjetoBase {
 			vm.setNome("vm"+this.indice);
 			vm.setNuvem(nuvem);
 			vm.setHost(this);
+			vm.atualizaReferencia();
 			vm.reiniciar();
 			listaVm.add(vm);
 			indice++;
@@ -59,6 +61,7 @@ public class Host extends ObjetoBase {
 		else {
 			vm.setNuvem(nuvem);
 			vm.setHost(this);
+			vm.atualizaReferencia();
 			vm.reiniciar();
 			listaVm.add(vm);
 		}
@@ -81,7 +84,6 @@ public class Host extends ObjetoBase {
 			listaVm.remove(index);
 		}
 		else {
-			System.out.println("Só é possivel remover se estiver vazio");
 			Notificacao.deletarNaoVazio();
 		}
 	}
@@ -101,6 +103,15 @@ public class Host extends ObjetoBase {
 		
 		if(i!=-1&&!destino.contentEquals(espaco.getReferencia())) {
 			espaco.enviaMensagem(destino, listaVm.remove(i));
+		}
+	}
+	
+	public void atualizaReferencia() {
+		
+		for(int i=0;i<listaVm.size();i++) {
+			listaVm.get(i).setNuvem(nuvem);
+			listaVm.get(i).atualizaReferencia();
+			listaVm.get(i).reiniciar();
 		}
 	}
 	

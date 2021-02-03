@@ -22,13 +22,14 @@ public class GUI {
 	private NuvemModel raiz;
 	private JTree tree;
 	private ActionListener ato;
-	private int index = 0;
 	private JDialog jdialog ;
+	private Espaco espaco;
+	//--------------------------------------------/-------------/--------------------------------------------//
+	
+	//----------------------------------------------/Strings/-----------------------------------------------//
 	private String dialogoResposta;
 	private String mensagemProcesso;
-	private JScrollPane scrollTree;
-	private JScrollPane scrollChat;
-	private JTextArea painelChat;
+	private String nome = "Cliente";
 	//--------------------------------------------/-------------/--------------------------------------------//
 	
 	//--------------------------------------------/Labels/Botoes/--------------------------------------------//
@@ -38,11 +39,17 @@ public class GUI {
 	private JButton teste;
 	//--------------------------------------------/-------------/--------------------------------------------//
 	
-	//-------------------------------------------/ComboBox/Botoes/-------------------------------------------//
+	//-------------------------------------------/ComboBox/-------------------------------------------//
 	private JComboBox<String> nuvemBox;
 	private JComboBox<String> hostBox;
 	private JComboBox<String> vmBox;
 	private JComboBox<String> processoBox;
+	//--------------------------------------------/-------------/--------------------------------------------//
+	
+	//-------------------------------------------/Paineis/Chats/-------------------------------------------//
+	private JScrollPane scrollTree;
+	private JScrollPane scrollChat;
+	private JTextArea painelChat;
 	//--------------------------------------------/-------------/--------------------------------------------//
 	
 	public static void main(String[] args) {
@@ -52,6 +59,9 @@ public class GUI {
 	public GUI() {
 		window = this;
 		initialize();
+		espaco = new Espaco(this);
+		espaco.start();
+		espaco.enviaMensagem("Servidor", "Cliente");
 	}
 	
 	private void initialize() {
@@ -74,32 +84,54 @@ public class GUI {
 		painelChat.setCaretPosition(painelChat.getText().length());
 	}
 	
+	public String getNome() {
+		return nome;
+	}
+	
+	public void setNome(String nome) {
+		this.nome = nome;
+		//espaco.finalizar();
+		//espaco = new Espaco(this);
+		//espaco.conecta();
+	}
+	
+	public void setListaNuvem(ArrayList<Nuvem> listaNuvem) {
+		int selected = tree.getLeadSelectionRow();		
+		this.listaNuvem = listaNuvem;
+		atualizaArvore();
+		tree.setSelectionRow(selected);
+	}
+	
 	private void varreBotao() {
 		
 		ato = new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				int selected = tree.getLeadSelectionRow();
+				//int selected = tree.getLeadSelectionRow();
 				String entradaDialogo = ""+tree.getLastSelectedPathComponent();
 				if(arg0.getSource() == adicionar) {
 					if(tree.getSelectionPath().getPathCount()==1) {
-						listaNuvem.add(new Nuvem("nuvem"+index));
-						index++;
+						espaco.enviaMensagem("Servidor", "criaNuvem");
+						//listaNuvem.add(new Nuvem("nuvem"+index));
+						//index++;
 					}
 					else if(tree.getSelectionPath().getPathCount()==2) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
-						listaNuvem.get(indexNuvem).criaHost();
+						//listaNuvem.get(indexNuvem).criaHost();
+						espaco.enviaMensagem("Servidor", "criaHost-"+indexNuvem);
 					}
 					else if(tree.getSelectionPath().getPathCount()==3) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 						int indexHost = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(1), tree.getSelectionPath().getPathComponent(2));
-						listaNuvem.get(indexNuvem).getListaHost().get(indexHost).criaVm();
+						//listaNuvem.get(indexNuvem).getListaHost().get(indexHost).criaVm();
+						espaco.enviaMensagem("Servidor", "criaVm-"+indexNuvem+"-"+indexHost);
 					}
 					else if(tree.getSelectionPath().getPathCount()==4) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 						int indexHost = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(1), tree.getSelectionPath().getPathComponent(2));
 						int indexVm = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(2), tree.getSelectionPath().getPathComponent(3));
-						listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).criaProcesso(window);
+						//listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).criaProcesso(window);
+						espaco.enviaMensagem("Servidor", "criaProcesso-"+indexNuvem+"-"+indexHost+"-"+indexVm);
 					}
 					else if(tree.getSelectionPath().getPathCount()==5) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
@@ -109,16 +141,23 @@ public class GUI {
 						dialogoResposta = "";
 				        criaDialogo(indexNuvem,indexHost,indexVm);
 				        System.out.println(dialogoResposta);
-						listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).getListaProcesso().get(indexProcesso).enviarMensagem(mensagemProcesso, dialogoResposta);
+						//listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).getListaProcesso().get(indexProcesso).enviarMensagem(mensagemProcesso, dialogoResposta);
+				        if(dialogoResposta.contains("nuvem"+indexNuvem+"/host"+indexHost+"/vm"+indexVm+"/processo"+indexProcesso)) {
+				        	System.out.println("Tá mandando pro mesmo canto");
+				        }
+				        else {
+				        	espaco.enviaMensagem("Servidor", "enviarMensagemP-"+indexNuvem+"-"+indexHost+"-"+indexVm+"-"+indexProcesso+"-"+mensagemProcesso+"//"+dialogoResposta);
+				        }			        
 					}
-					atualizaArvore();
+					//atualizaArvore();
 				}
 				else if(arg0.getSource() == remover) {
 					if(tree.getSelectionPath().getPathCount()==2) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 						if(listaNuvem.get(indexNuvem).getListaHost().isEmpty()) {
-							listaNuvem.get(indexNuvem).finalizar();
-							listaNuvem.remove(indexNuvem);
+							//listaNuvem.get(indexNuvem).finalizar();
+							//listaNuvem.remove(indexNuvem);
+							espaco.enviaMensagem("Servidor", "removeNuvem-"+indexNuvem);
 						}
 						else {
 							System.out.println("Num dá man, n insiste");
@@ -128,22 +167,25 @@ public class GUI {
 					else if(tree.getSelectionPath().getPathCount()==3) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 						int indexHost = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(1), tree.getSelectionPath().getPathComponent(2));
-						listaNuvem.get(indexNuvem).removeHost(indexHost);
+						//listaNuvem.get(indexNuvem).removeHost(indexHost);
+						espaco.enviaMensagem("Servidor", "removeHost-"+indexNuvem+"-"+indexHost);
 					}
 					else if(tree.getSelectionPath().getPathCount()==4) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 						int indexHost = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(1), tree.getSelectionPath().getPathComponent(2));
 						int indexVm = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(2), tree.getSelectionPath().getPathComponent(3));
-						listaNuvem.get(indexNuvem).getListaHost().get(indexHost).removeVm(indexVm);
+						//listaNuvem.get(indexNuvem).getListaHost().get(indexHost).removeVm(indexVm);
+						espaco.enviaMensagem("Servidor", "removeVm-"+indexNuvem+"-"+indexHost+"-"+indexVm);
 					}
 					else if(tree.getSelectionPath().getPathCount()==5) {
 						int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 						int indexHost = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(1), tree.getSelectionPath().getPathComponent(2));
 						int indexVm = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(2), tree.getSelectionPath().getPathComponent(3));
 						int indexProcesso = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(3), tree.getSelectionPath().getPathComponent(4));
-						listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).getListaProcesso().remove(indexProcesso);
+						//listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).getListaProcesso().remove(indexProcesso);
+						espaco.enviaMensagem("Servidor", "removeProcesso-"+indexNuvem+"-"+indexHost+"-"+indexVm+"-"+indexProcesso);
 					}
-					atualizaArvore();
+					//atualizaArvore();
 				}
 				else if(arg0.getSource() == enviarMsg) {
 					if(entradaDialogo.contains("Universo")) {
@@ -159,31 +201,38 @@ public class GUI {
 				        criaDialogo(0);
 				        System.out.println(entradaDialogo);
 				        System.out.println(dialogoResposta);
-				        if(dialogoResposta.contains("vm")) {
+				        if(dialogoResposta.contains("null")) {
+				        	//System.out.println("Não foi possivel encontrar o destino");
+				        	Notificacao.naoExisteDestino();
+				        }
+				        else if(dialogoResposta.contains("vm")&&entradaDialogo.contains("processo")) {
 							int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 							int indexHost = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(1), tree.getSelectionPath().getPathComponent(2));
 							int indexVm = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(2), tree.getSelectionPath().getPathComponent(3));
 							System.out.println(listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).getListaProcesso());
-							listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).moverProcesso(entradaDialogo, dialogoResposta);
+							//listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm().get(indexVm).moverProcesso(entradaDialogo, dialogoResposta);
+							espaco.enviaMensagem("Servidor", "moverProcesso-"+indexNuvem+"-"+indexHost+"-"+indexVm+"-"+entradaDialogo+"//"+dialogoResposta);
 				        }
-				        else if(dialogoResposta.contains("host")) {
+				        else if(dialogoResposta.contains("host")&&entradaDialogo.contains("vm")) {
 							int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 							int indexHost = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(1), tree.getSelectionPath().getPathComponent(2));
 							System.out.println(listaNuvem.get(indexNuvem).getListaHost().get(indexHost).getListaVm());
-							listaNuvem.get(indexNuvem).getListaHost().get(indexHost).moverVm(entradaDialogo, dialogoResposta);
+							//listaNuvem.get(indexNuvem).getListaHost().get(indexHost).moverVm(entradaDialogo, dialogoResposta);
+							espaco.enviaMensagem("Servidor", "moverVm-"+indexNuvem+"-"+indexHost+"-"+entradaDialogo+"//"+dialogoResposta);
 				        }
-				        else if(dialogoResposta.contains("nuvem")) {
+				        else if(dialogoResposta.contains("nuvem")&&entradaDialogo.contains("host")) {
 							int indexNuvem = raiz.getIndexOfChild(tree.getSelectionPath().getPathComponent(0), tree.getSelectionPath().getPathComponent(1));
 							System.out.println(listaNuvem.get(indexNuvem).getListaHost());
-							listaNuvem.get(indexNuvem).moverHost(entradaDialogo, dialogoResposta);
+							//listaNuvem.get(indexNuvem).moverHost(entradaDialogo, dialogoResposta);
+							espaco.enviaMensagem("Servidor", "moverHost-"+indexNuvem+"-"+entradaDialogo+"//"+dialogoResposta);
 				        }
 					}
-					try {
+					/*try {
 						Thread.sleep(300);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
-					}
-					atualizaArvore();
+					}*/
+					//atualizaArvore();
 				}
 				else if(arg0.getSource() == teste) {
 					
@@ -213,7 +262,7 @@ public class GUI {
 					}
 				}
 				atualizaInterface();
-				tree.setSelectionRow(selected);
+				//tree.setSelectionRow(selected);
 			}
 		};
 		
@@ -315,7 +364,8 @@ public class GUI {
 	}
 	
 	private void atualizaArvore() {
-		tree.setModel(new NuvemModel(listaNuvem));
+		raiz = new NuvemModel(listaNuvem);
+		tree.setModel(raiz);
 		for (int i = 0; i < tree.getRowCount(); i++) {
 		    tree.expandRow(i);
 		}

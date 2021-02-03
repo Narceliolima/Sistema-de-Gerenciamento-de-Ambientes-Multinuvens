@@ -1,6 +1,6 @@
 import java.io.Serializable;
 import java.rmi.RemoteException;
-
+import java.util.ArrayList;
 import net.jini.core.entry.UnusableEntryException;
 import net.jini.core.transaction.TransactionException;
 import net.jini.space.JavaSpace;
@@ -14,6 +14,8 @@ public class Espaco extends Thread implements Serializable {
 	private Host host = null;
 	private Vm vm = null;
 	private Processo processo = null;
+	private Principal servidor = null;
+	private GUI cliente = null;
 	//--------------------------------------------/-------------/--------------------------------------------//
 	
 	//--------------------------------------------/Flag/--------------------------------------------//
@@ -23,6 +25,18 @@ public class Espaco extends Thread implements Serializable {
 	
 	public Espaco() {
 		conecta();
+	}
+	
+	public Espaco(Principal servidor) {
+		this();
+		this.servidor = servidor;
+		System.out.println("Espaco criado: "+this.servidor.getNome());
+	}
+	
+	public Espaco(GUI cliente) {
+		this();
+		this.cliente = cliente;
+		System.out.println("Espaco criado: "+this.cliente.getNome());
 	}
 	
 	public Espaco(Nuvem nuvem) {
@@ -80,14 +94,24 @@ public class Espaco extends Thread implements Serializable {
 	 */
 	public String getReferencia() {
 		
-		String referencia = nuvem.getNome();
+		String referencia;
 		
-		if(host!=null) {
-			referencia += "/"+host.getNome();
-			if(vm!=null) {
-				referencia += "/"+vm.getNome();
-				if(processo!=null) {
-					referencia += "/"+processo.getNome();
+		if(servidor!=null) {
+			referencia = servidor.getNome();
+		}
+		else if(cliente!=null) {
+			referencia = cliente.getNome();
+		}
+		else {
+			referencia = nuvem.getNome();
+			
+			if(host!=null) {
+				referencia += "/"+host.getNome();
+				if(vm!=null) {
+					referencia += "/"+vm.getNome();
+					if(processo!=null) {
+						referencia += "/"+processo.getNome();
+					}
 				}
 			}
 		}
@@ -98,9 +122,26 @@ public class Espaco extends Thread implements Serializable {
 	/**
 	 * Função para pegar a assinatura que irá compor o modelo de padrão da mensagem
 	 */
+	@SuppressWarnings("unchecked")
 	public void adicionaObjeto(Object mensagem) {
-
-		if(processo!=null) {
+		
+		if(servidor!=null) {
+			servidor.receberMensagem((String)mensagem);
+		}
+		else if(cliente!=null) {
+			if(mensagem instanceof ArrayList<?>) {
+				cliente.setListaNuvem((ArrayList<Nuvem>)mensagem);
+			}
+			else if(mensagem instanceof String) {
+				if(((String) mensagem).contains("Cliente")) {
+					cliente.setNome((String)mensagem);
+				}
+				else {
+					cliente.esreveChat((String)mensagem);
+				}
+			}
+		}
+		else if(processo!=null) {
 			processo.receberMensagem((String)mensagem);
 		}
 		else if(vm!=null) {
@@ -129,7 +170,7 @@ public class Espaco extends Thread implements Serializable {
 			try {
 				msg = (Mensagem) space.take(new Mensagem(getReferencia()), null, 10 * 1000);
 				if(msg != null) {
-					System.out.println("Mensagem recebida por "+getReferencia());
+					System.out.println("Mensagem recebida por "+getReferencia()+" : "+msg.mensagem);
 					adicionaObjeto(msg.mensagem);
 				}
 			} catch (RemoteException | UnusableEntryException | TransactionException | InterruptedException e) {

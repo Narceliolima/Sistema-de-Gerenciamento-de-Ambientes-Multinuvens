@@ -12,7 +12,7 @@ public class Vm extends ObjetoBase{
 		super(nome);
 		this.nuvem = nuvem;
 		this.host = host;
-		iniciaEspaco();
+		//iniciaEspaco();
 	}
 	
 	public void iniciaEspaco() {
@@ -36,17 +36,18 @@ public class Vm extends ObjetoBase{
 		return -1;
 	}
 	
-	public void criaProcesso(GUI gui) {
+	public void criaProcesso() {
 		
 		while(verificaProcessoExiste("processo"+this.indice)!=-1) {
 			indice++;
 		}
-		listaProcesso.add(new Processo("processo"+this.indice,nuvem,host,this,gui));
+		listaProcesso.add(new Processo("processo"+this.indice,nuvem,host,this));
+		listaProcesso.get(listaProcesso.size()-1).iniciaEspaco();
 		indice++;
 	}
 	
 	public void adicionaProcesso(Processo processo) {
-		
+				
 		if(verificaProcessoExiste(processo.getNome())!=-1) {
 			while(verificaProcessoExiste("processo"+this.indice)!=-1) {
 				indice++;
@@ -93,6 +94,15 @@ public class Vm extends ObjetoBase{
 		
 		if(i!=-1&&!destino.contentEquals(espaco.getReferencia())) {
 			espaco.enviaMensagem(destino, listaProcesso.remove(i));
+		}
+	}
+	
+	public void atualizaReferencia() {
+		
+		for(int i=0;i<listaProcesso.size();i++) {
+			listaProcesso.get(i).setNuvem(nuvem);
+			listaProcesso.get(i).setHost(host);
+			listaProcesso.get(i).reiniciar();
 		}
 	}
 	

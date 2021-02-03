@@ -6,23 +6,13 @@ public class Processo extends ObjetoBase {
 	private Nuvem nuvem;
 	private Host host;
 	private Vm vm;
-	private GUI gui;
 	
 	public Processo(String nome, Nuvem nuvem, Host host, Vm vm) {
 		super(nome);
 		this.nuvem = nuvem;
 		this.host = host;
 		this.vm = vm;
-		iniciaEspaco();
-	}
-	
-	public Processo(String nome, Nuvem nuvem, Host host, Vm vm,GUI gui) {
-		super(nome);
-		this.nuvem = nuvem;
-		this.host = host;
-		this.vm = vm;
-		this.gui = gui;
-		iniciaEspaco();
+		//iniciaEspaco();
 	}
 	
 	public void iniciaEspaco() {
@@ -38,8 +28,10 @@ public class Processo extends ObjetoBase {
 	}
 	
 	public void receberMensagem(String mensagem) {
-		gui.esreveChat("Mensagem recebida por "+nuvem+"/"+host+"/"+vm+"/"+this);
-		gui.esreveChat(mensagem);
+		//gui.esreveChat("Mensagem recebida por "+nuvem+"/"+host+"/"+vm+"/"+this);
+		//gui.esreveChat(mensagem);
+		espaco.enviaMensagem("Servidor", "enviarMensagemC-Mensagem recebida por "+nuvem+"/"+host+"/"+vm+"/"+this);
+		espaco.enviaMensagem("Servidor", "enviarMensagemC-"+mensagem);
 	}
 	
 	public void finalizar() {

@@ -17,4 +17,8 @@ public class Notificacao {
 	public static void naoExisteTopico() {
 		JOptionPane.showMessageDialog(null, "Topico nao existe");
 	}
+	
+	public static void naoExisteDestino() {
+		JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o destino");
+	}
 }

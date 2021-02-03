@@ -8,7 +8,7 @@ public class Nuvem extends ObjetoBase{
 	
 	public Nuvem(String nome) {
 		super(nome);
-		iniciaEspaco();
+		//iniciaEspaco();
 	}
 	
 	public void iniciaEspaco() {
@@ -38,6 +38,7 @@ public class Nuvem extends ObjetoBase{
 			indice++;
 		}
 		listaHost.add(new Host("host"+this.indice,this));
+		listaHost.get(listaHost.size()-1).iniciaEspaco();
 		indice++;
 	}
 	
@@ -49,12 +50,14 @@ public class Nuvem extends ObjetoBase{
 			}
 			host.setNome("host"+this.indice);
 			host.setNuvem(this);
+			host.atualizaReferencia();
 			host.reiniciar();
 			listaHost.add(host);
 			indice++;
 		}
 		else {
 			host.setNuvem(this);
+			host.atualizaReferencia();
 			host.reiniciar();
 			listaHost.add(host);
 		}
@@ -82,7 +85,6 @@ public class Nuvem extends ObjetoBase{
 			listaHost.remove(index);
 		}
 		else {
-			System.out.println("Só é possivel remover se estiver vazio");
 			Notificacao.deletarNaoVazio();
 		}
 	}

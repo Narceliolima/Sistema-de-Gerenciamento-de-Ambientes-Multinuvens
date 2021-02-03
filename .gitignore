@@ -1,2 +1,4 @@
 /target/
-/bin/
+/bin
+/src/Teste.java
+/src/ObjetoGenerico.java
